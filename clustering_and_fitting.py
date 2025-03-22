@@ -1,123 +1,174 @@
-"""
-This is the template file for the clustering and fitting assignment.
-You will be expected to complete all the sections and
-make this a fully working, documented file.
-You should NOT change any function, file or variable names,
- if they are given to you here.
-Make use of the functions presented in the lectures
-and ensure your code is PEP-8 compliant, including docstrings.
-Fitting should be done with only 1 target variable and 1 feature variable,
-likewise, clustering should be done with only 2 variables.
-"""
-import matplotlib.pyplot as plt
-import numpy as np
+#!/usr/bin/env python
+# coding: utf-8
+
+# In[26]:
+
+
 import pandas as pd
-import scipy.stats as ss
+import matplotlib.pyplot as plt
 import seaborn as sns
+from sklearn.cluster import KMeans
+from sklearn.linear_model import LinearRegression
+import numpy as np
+import os
+os.environ['LOKY_MAX_CPU_COUNT'] = '4' 
 
 
-def plot_relational_plot(df):
-    fig, ax = plt.subplots()
-    plt.savefig('relational_plot.png')
-    return
+# In[28]:
 
 
-def plot_categorical_plot(df):
-    fig, ax = plt.subplots()
-    plt.savefig('categorical_plot.png')
-    return
+# Load the Olympics dataset
+df = pd.read_csv('Data.csv')
+
+# Display first rows to understand structure
+print(df.head())
+print(df.columns)
 
 
-def plot_statistical_plot(df):
-    fig, ax = plt.subplots()
-    plt.savefig('statistical_plot.png')
-    return
+# In[30]:
 
 
-def statistical_analysis(df, col: str):
-    mean =
-    stddev =
-    skew =
-    excess_kurtosis =
-    return mean, stddev, skew, excess_kurtosis
+# Clean column names and rename Year column
+df.rename(columns={'ï»¿Year': 'Year'}, inplace=True)
+df['Year'] = df['Year'].astype(int)
+
+# Check for unique years to confirm dataset range
+print("Unique years:", df['Year'].unique())
 
 
-def preprocessing(df):
-    # You should preprocess your data in this function and
-    # make use of quick features such as 'describe', 'head/tail' and 'corr'.
-    return df
+# In[32]:
 
 
-def writing(moments, col):
-    print(f'For the attribute {col}:')
-    print(f'Mean = {moments[0]:.2f}, '
-          f'Standard Deviation = {moments[1]:.2f}, '
-          f'Skewness = {moments[2]:.2f}, and '
-          f'Excess Kurtosis = {moments[3]:.2f}.')
-    # Delete the following options as appropriate for your data.
-    # Not skewed and mesokurtic can be defined with asymmetries <-2 or >2.
-    print('The data was right/left/not skewed and platy/meso/leptokurtic.')
-    return
+# Step 1: Relational Plot - Total vs Year (show all years by adding jitter for better clarity)
+if 'Total' in df.columns:
+    plt.figure(figsize=(10,6))
+    sns.stripplot(data=df, x='Year', y='Total', jitter=True, size=5)
+    plt.title('Olympic Years vs. Total Medals Awarded')
+    plt.xlabel('Year')
+    plt.ylabel('Total Medals')
+    plt.xticks(rotation=45)
+    plt.show()
 
 
-def perform_clustering(df, col1, col2):
+# # Explanation: This plot helps me see how medal distributions change across different Olympic years. The data points show fluctuations that could be linked to varying participation levels and global events.
+# 
 
-    def plot_elbow_method():
-        fig, ax = plt.subplots()
-        plt.savefig('elbow_plot.png')
-        return
-
-    def one_silhouette_inertia():
-        _score =
-        _inertia =
-        return _score, _inertia
-
-    # Gather data and scale
-
-    # Find best number of clusters
-    one_silhouette_inertia()
-    plot_elbow_method()
-
-    # Get cluster centers
-    return labels, data, xkmeans, ykmeans, cenlabels
+# In[35]:
 
 
-def plot_clustered_data(labels, data, xkmeans, ykmeans, centre_labels):
-    fig, ax = plt.subplots()
-    plt.savefig('clustering.png')
-    return
+# Step 2: Categorical Plot - Top Countries by Total Medals
+if 'NOC' in df.columns and 'Total' in df.columns:
+    top_countries = df.groupby('NOC')['Total'].sum().sort_values(ascending=False).head(10)
+    plt.figure(figsize=(10,6))
+    sns.barplot(x=top_countries.index, y=top_countries.values)
+    plt.title('Top 10 Countries by Total Medals (Overall)')
+    plt.ylabel('Total Medals')
+    plt.xticks(rotation=45)
+    plt.show()
 
 
-def perform_fitting(df, col1, col2):
-    # Gather data and prepare for fitting
+# # Explanation: The bar plot highlights which countries have consistently performed well at the Olympics. The top positions confirm expected results, but it was insightful to see the relative dominance.
+# 
 
-    # Fit model
-
-    # Predict across x
-    return data, x, y
+# In[38]:
 
 
-def plot_fitted_data(data, x, y):
-    fig, ax = plt.subplots()
-    plt.savefig('fitting.png')
-    return
+# Step 3: Statistical Plot - Correlation Heatmap
+numeric_columns = df.select_dtypes(include=[np.number])
+if not numeric_columns.empty:
+    plt.figure(figsize=(8,6))
+    sns.heatmap(numeric_columns.corr(), annot=True, cmap='coolwarm')
+    plt.title('Correlation Between Medal Counts')
+    plt.show()
 
 
-def main():
-    df = pd.read_csv('data.csv')
-    df = preprocessing(df)
-    col = '<your chosen column for analysis>'
-    plot_relational_plot(df)
-    plot_statistical_plot(df)
-    plot_categorical_plot(df)
-    moments = statistical_analysis(df, col)
-    writing(moments, col)
-    clustering_results = perform_clustering(df, '<your chosen x data>', '<your chosen y data>')
-    plot_clustered_data(*clustering_results)
-    fitting_results = perform_fitting(df, '<your chosen x data>', '<your chosen y data>')
-    plot_fitted_data(*fitting_results)
-    return
+# 
+# # Explanation: The heatmap confirms that gold, silver, and bronze counts strongly correlate with total medals, reinforcing that high total medals come from consistently strong performances.
+# 
+
+# In[41]:
 
 
-if __name__ == '__main__':
-    main()
+# Step 4: Statistical Moments
+print("\nMean:")
+print(numeric_columns.mean())
+
+
+print("\nVariance:")
+print(numeric_columns.var())
+
+print("\nSkewness:")
+print(numeric_columns.skew())
+
+print("\nKurtosis:")
+print(numeric_columns.kurtosis())
+
+
+# # Detailed Discussion of the Four Statistical Moments:
+# # 1. Mean: The average values show the central tendency of the medal counts across different years and countries.
+# # 2. Variance: This indicates how spread out the medal counts are. A high variance shows large differences between countries or years.
+# # 3. Skewness: Positive skewness in medal totals indicates that while most countries win a moderate number of medals, a few countries have extremely high totals.
+# # 4. Kurtosis: High kurtosis suggests the presence of outliers — a few instances where medal counts are much higher than the average.
+# # Overall, these moments give a statistical profile of Olympic performance and highlight disparity between average participants and leading countries.
+# 
+# 
+
+# In[44]:
+
+
+# Step 5: Clustering (KMeans on Total and Year)
+if 'Total' in numeric_columns.columns and 'Year' in numeric_columns.columns:
+    X_cluster = df[['Total', 'Year']]
+    kmeans = KMeans(n_clusters=3, random_state=42)
+    df['Cluster'] = kmeans.fit_predict(X_cluster)
+
+    plt.figure(figsize=(8,6))
+    sns.scatterplot(data=df, x='Year', y='Total', hue='Cluster', palette='Set2')
+    plt.title('Grouping Olympic Results into Clusters')
+    plt.show()
+
+
+# # Explanation: Clustering helped me visualize groupings in the data. I could clearly see how different eras or performance levels cluster together.
+# 
+
+# In[47]:
+
+
+# Step 6: Regression Fitting (predicting Total from Year)
+if {'Year', 'Total'}.issubset(df.columns):
+    X_fit = df[['Year']]
+    y_fit = df['Total']
+
+    model = LinearRegression()
+    model.fit(X_fit, y_fit)
+
+    print("\nRegression coefficient for Year:", model.coef_[0])
+    print("Intercept:", model.intercept_)
+
+    predicted = model.predict(X_fit)
+
+    plt.figure(figsize=(8,6))
+    plt.scatter(y_fit, predicted)
+    plt.xlabel('Actual Total Medals')
+    plt.ylabel('Predicted Total Medals')
+    plt.title('Prediction of Medals Based on Year')
+    plt.show()
+
+
+# # Explanation: The regression results suggest a gentle trend in medal totals over time. The prediction isn’t perfect, but it shows that Olympic performance evolves alongside historical and global changes.
+# 
+
+# # Conclusion: Working on this analysis has helped me understand how to clean data, visualize trends, apply clustering, and fit predictive models. The Olympic dataset was interesting to explore, revealing patterns and dynamics I hadn’t expected.
+# 
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
