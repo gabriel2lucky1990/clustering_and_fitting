@@ -167,7 +167,7 @@ if {'Year', 'Total'}.issubset(df.columns):
     plt.ylabel('Residuals')
     plt.title('Residual Plot')
     plt.show()
-    
+
 # Explanation: The regression results suggest a gentle trend in medal totals
 # over time.
 # The prediction is not perfect, but it shows that Olympic performance
