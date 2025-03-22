@@ -1,8 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[69]:
-
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -35,12 +30,11 @@ if 'Total' in df.columns:
     plt.xticks(rotation=45)
     plt.show()
 
-
-# # Explanation
-# # This plot helps me see how medal distributions
-# # change across different Olympic years.
-# # The data points show fluctuations that could be linked 
-# # to varying participation levels and global events.
+# Explanation
+# This plot helps me see how medal distributions
+# change across different Olympic years.
+# The data points show fluctuations that could be linked
+# to varying participation levels and global events.
 
 # Step 2: Categorical Plot - Top Countries by Total Medals
 if 'NOC' in df.columns and 'Total' in df.columns:
@@ -55,11 +49,11 @@ if 'NOC' in df.columns and 'Total' in df.columns:
     plt.xticks(rotation=45)
     plt.show()
 
-
-# Explanation: The bar plot highlights which countries have consistently performed well
+# Explanation: The bar plot highlights which countries have consistently
+# performed well
 # at the Olympics.
-# # The top positions confirm expected results, but it was insightful to see the relative dominance.
-
+# # The top positions confirm expected results, but it was insightful to see
+# the relative dominance.
 
 # Step 3: Statistical Plot - Correlation Heatmap
 numeric_columns = df.select_dtypes(include=[np.number])
@@ -69,15 +63,13 @@ if not numeric_columns.empty:
     plt.title('Correlation Between Medal Counts')
     plt.show()
 
- 
-# Explanation: The heatmap confirms that gold, silver, and bronze 
+# Explanation: The heatmap confirms that gold, silver, and bronze
 # counts strongly correlate with total medals,
-# reinforcing that high total medals come from consistently strong performances.
+# reinforcing that high total medals come from consistently strong performances
 
 # Step 4: Statistical Moments
 print("\nMean:")
 print(numeric_columns.mean())
-
 
 print("\nVariance:")
 print(numeric_columns.var())
@@ -88,19 +80,18 @@ print(numeric_columns.skew())
 print("\nKurtosis:")
 print(numeric_columns.kurtosis())
 
-
-# # Detailed Discussion of the Four Statistical Moments:
-# # 1. Mean: The average values show the central tendency of
-# # the medal counts across different years and countries.
-# # 2. Variance: This indicates how spread out the medal counts are.
-# # A high variance shows large differences between countries or years.
-# # 3. Skewness: Positive skewness in medal totals indicates
-# # that while most countries win a moderate number of medals,
-# # a few countries have extremely high totals.
-# # 4. Kurtosis: High kurtosis suggests the presence of outliers —
-# # a few instances where medal counts are much higher than the average.
-# # Overall, these moments give a statistical profile of Olympic performance
-# # and highlight disparity between average participants and leading countries.
+# Detailed Discussion of the Four Statistical Moments:
+# 1. Mean: The average values show the central tendency of
+# the medal counts across different years and countries.
+# 2. Variance: This indicates how spread out the medal counts are.
+# A high variance shows large differences between countries or years.
+# 3. Skewness: Positive skewness in medal totals indicates
+# that while most countries win a moderate number of medals,
+# a few countries have extremely high totals.
+# 4. Kurtosis: High kurtosis suggests the presence of outliers —
+# a few instances where medal counts are much higher than the average.
+# Overall, these moments give a statistical profile of Olympic performance
+# and highlight disparity between average participants and leading countries.
 
 # Step 5: Clustering (KMeans on Total and Year)
 if 'Total' in numeric_columns.columns and 'Year' in numeric_columns.columns:
@@ -118,8 +109,7 @@ if 'Total' in numeric_columns.columns and 'Year' in numeric_columns.columns:
     plt.title('Grouping Olympic Results into Clusters')
     plt.show()
 
-
-# # Explanation: Clustering helped me visualize groupings in the data.
+# Explanation: Clustering helped me visualize groupings in the data.
 # I could clearly see how different eras or performance levels cluster together
 
 # Step 6: Regression Fitting (predicting Total from Year)
@@ -142,12 +132,11 @@ if {'Year', 'Total'}.issubset(df.columns):
     plt.title('Prediction of Medals Based on Year')
     plt.show()
 
-
-# # Explanation: The regression results suggest a gentle trend in medal totals
+# Explanation: The regression results suggest a gentle trend in medal totals
 # over time.
-# # The prediction isn’t perfect, but it shows that Olympic performance 
-# # evolves alongside historical and global changes.
-# # Conclusion: Working on this analysis has helped me understand how to
-# # clean data, visualize trends, apply clustering, and fit predictive models.
-# # The Olympic dataset was interesting to explore,
-# # revealing patterns and dynamics I hadn’t expected.
+# The prediction isn’t perfect, but it shows that Olympic performance
+# evolves alongside historical and global changes.
+# Conclusion: Working on this analysis has helped me understand how to
+# clean data, visualize trends, apply clustering, and fit predictive models.
+# The Olympic dataset was interesting to explore,
+# revealing patterns and dynamics I hadn’t expected.
