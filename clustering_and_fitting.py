@@ -168,7 +168,6 @@ if {'Year', 'Total'}.issubset(df.columns):
     plt.title('Residual Plot')
     plt.show()
     
-    
 # Explanation: The regression results suggest a gentle trend in medal totals
 # over time.
 # The prediction is not perfect, but it shows that Olympic performance
@@ -182,7 +181,7 @@ if {'Year', 'Total'}.issubset(df.columns):
 # The analysis conducted demonstrated strong relationships between medal counts
 # and Olympic years, with clear clusters emerging after testing multiple
 # cluster counts using the elbow and silhouette methods.
-# The chosen 3-cluster model effectively grouped historical data based 
+# The chosen 3-cluster model effectively grouped historical data based
 # on performance trends and Olympic periods.
 # Linear regression fitting showed a gradual upward trend in total medals
 # awarded, confirmed by the R² value.
