@@ -93,8 +93,8 @@ print(numeric_columns.kurtosis())
 # a few instances where medal counts are much higher than the average.
 # Overall, these moments give a statistical profile of Olympic performance
 # and highlight disparity between average participants and leading countries.
-# Step 5: KMeans Clustering with Elbow Method
 
+# Step 5: KMeans Clustering with Elbow Method
 if 'Total' in numeric_columns.columns and 'Year' in numeric_columns.columns:
     X_cluster = df[['Total', 'Year']]
 
