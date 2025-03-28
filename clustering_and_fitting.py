@@ -41,11 +41,11 @@ def plot_categorical(df):
     """
     if 'NOC' in df.columns and 'Total' in df.columns:
         top_countries = (
-    df.groupby('NOC')['Total']
-    .sum()
-    .sort_values(ascending=False)
-    .head(10)
-)
+            df.groupby('NOC')['Total']
+            .sum()
+            .sort_values(ascending=False)
+            .head(10)
+         )
 
         plt.figure(figsize=(10, 6))
         sns.barplot(x=top_countries.index, y=top_countries.values)
@@ -139,12 +139,12 @@ def perform_clustering(df):
 
         plt.figure(figsize=(8, 6))
         sns.scatterplot(
-    data=df,
-    x='Year',
-    y='Total',
-    hue='Cluster',
-    palette='Set2'
-)
+            data=df,
+            x='Year',
+            y='Total',
+            hue='Cluster',
+            palette='Set2'
+        )
 
         plt.title('Grouping Olympic Results into Clusters')
         plt.savefig("clustering_plot.png")
@@ -215,7 +215,7 @@ def main():
     calculate_statistics(df)
     perform_clustering(df)
     perform_fitting(df)
-    
+
 
 if __name__ == "__main__":
     main()
