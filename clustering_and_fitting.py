@@ -17,6 +17,7 @@ from sklearn.metrics import silhouette_score, r2_score
 from sklearn.preprocessing import StandardScaler
 import numpy as np
 
+
 def plot_relational(df):
     """
     Generates a relational plot showing total medals by Olympic year.
@@ -32,16 +33,19 @@ def plot_relational(df):
         plt.savefig("relational_plot.png")
         plt.show()
 
+
 def plot_categorical(df):
     """
     Displays a categorical bar plot of the top 10 countries by total medals.
     Groups data by NOC and aggregates total medals.
     """
     if 'NOC' in df.columns and 'Total' in df.columns:
-        top_countries = (df.groupby('NOC')['Total']
-                   .sum()
-                   .sort_values(ascending=False)
-                   .head(10))
+        top_countries = (
+    df.groupby('NOC')['Total']
+    .sum()
+    .sort_values(ascending=False)
+    .head(10)
+)
 
         plt.figure(figsize=(10, 6))
         sns.barplot(x=top_countries.index, y=top_countries.values)
@@ -51,10 +55,11 @@ def plot_categorical(df):
         plt.savefig("categorical_plot.png")
         plt.show()
 
+
 def plot_statistical(df):
     """
     Displays a heatmap of correlations between numeric columns in the dataset.
-    Useful for identifying relationships between medal counts and other 
+    Useful for identifying relationships between medal counts and other
     variables.
     """
     numeric_columns = df.select_dtypes(include=[np.number])
@@ -64,6 +69,7 @@ def plot_statistical(df):
         plt.title('Correlation Between Medal Counts')
         plt.savefig("statistical_plot.png")
         plt.show()
+
 
 def calculate_statistics(df):
     """
@@ -88,6 +94,7 @@ def calculate_statistics(df):
 
     print("\nKurtosis:")
     print(numeric_columns.kurtosis())
+
 
 def perform_clustering(df):
     """
@@ -131,12 +138,18 @@ def perform_clustering(df):
         df['Cluster'] = kmeans.fit_predict(X_scaled)
 
         plt.figure(figsize=(8, 6))
-        sns.scatterplot(data=df, x='Year', y='Total',
-                hue='Cluster', palette='Set2')
+        sns.scatterplot(
+    data=df,
+    x='Year',
+    y='Total',
+    hue='Cluster',
+    palette='Set2'
+)
 
         plt.title('Grouping Olympic Results into Clusters')
         plt.savefig("clustering_plot.png")
         plt.show()
+
 
 def perform_fitting(df):
     """
@@ -182,6 +195,7 @@ def perform_fitting(df):
         plt.savefig("residual_plot.png")
         plt.show()
 
+
 def main():
     """
     Main function that loads the dataset, cleans it,
@@ -201,6 +215,7 @@ def main():
     calculate_statistics(df)
     perform_clustering(df)
     perform_fitting(df)
+    
 
 if __name__ == "__main__":
     main()
