@@ -1,11 +1,12 @@
-"""
-Olympics Medals Analysis: Visualizations, Statistics, Clustering, and
-Regression Fitting
-Author: Gabriel Lucky Lotanna (student id: 24070357)
-Description: This script explores Olympic data using statistical analysis,
-clustering (KMeans), and linear regression.
-It includes visualizations (relational, categorical, statistical), statistical
-moments, and fitting with proper scaling.
+
+""" 
+Olympics Medals Analysis: Visualizations, Statistics, Clustering, and 
+Regression Fitting 
+Author: Gabriel Lucky Lotanna (student id: 24070357) 
+Description: This script explores Olympic data using statistical analysis, 
+clustering (KMeans), and linear regression. 
+It includes visualizations (relational, categorical, statistical), statistical 
+moments, and fitting with proper scaling. 
 """
 
 import pandas as pd
@@ -18,7 +19,7 @@ from sklearn.preprocessing import StandardScaler
 import numpy as np
 
 
-def plot_relational(df):
+def plot_relational_plot(df):
     """
     Generates a relational plot showing total medals by Olympic year.
     Uses a seaborn stripplot to display trends over time.
@@ -34,7 +35,7 @@ def plot_relational(df):
         plt.show()
 
 
-def plot_categorical(df):
+def plot_categorical_plot(df):
     """
     Displays a categorical bar plot of the top 10 countries by total medals.
     Groups data by NOC and aggregates total medals.
@@ -46,6 +47,7 @@ def plot_categorical(df):
             .sort_values(ascending=False)
             .head(10)
         )
+        
         plt.figure(figsize=(10, 6))
         sns.barplot(x=top_countries.index, y=top_countries.values)
         plt.title('Top 10 Countries by Total Medals (Overall)')
@@ -55,7 +57,7 @@ def plot_categorical(df):
         plt.show()
 
 
-def plot_statistical(df):
+def plot_statistical_plot(df):
     """
     Displays a heatmap of correlations between numeric columns in the dataset.
     Useful for identifying relationships between medal counts and other
@@ -70,7 +72,7 @@ def plot_statistical(df):
         plt.show()
 
 
-def calculate_statistics(df):
+def statistical_analysis(df, col=None):
     """
     Calculates and prints descriptive statistics including head, describe,
     mean, variance, skewness, and kurtosis of numerical columns.
@@ -95,105 +97,149 @@ def calculate_statistics(df):
     print("\nKurtosis (Tailedness of distribution — 4th moment):")
     print(numeric_columns.kurtosis())
 
+    return (
+        numeric_columns.mean()[col],
+        numeric_columns.std()[col],
+        numeric_columns.skew()[col],
+        numeric_columns.kurtosis()[col]
+    )
 
-def perform_clustering(df):
+
+def preprocessing(df):
     """
-    Applies KMeans clustering on Total medals and Year columns.
-    Displays Elbow and Silhouette plots, and a scatterplot of clustered data.
-    Includes scaling and inverse scaling.
+    Preprocess the dataset. Placeholder for describe, head, correlation, etc.
     """
-    if 'Total' in df.columns and 'Year' in df.columns:
-        X_cluster = df[['Total', 'Year']]
-        scaler_cluster = StandardScaler()
-        X_scaled = scaler_cluster.fit_transform(X_cluster)
-
-        distortions = []
-        silhouette_scores = []
-        K_range = range(2, 10)
-
-        for k in K_range:
-            kmeans = KMeans(n_clusters=k, random_state=42)
-            kmeans.fit(X_scaled)
-            distortions.append(kmeans.inertia_)
-            silhouette_scores.append(
-                silhouette_score(X_scaled, kmeans.labels_)
-            )
-
-        plt.figure(figsize=(10, 5))
-        plt.plot(K_range, distortions, marker='o')
-        plt.title('Elbow Method for Optimal K')
-        plt.xlabel('Number of Clusters')
-        plt.ylabel('Inertia')
-        plt.savefig("elbow_plot.png")
-        plt.show()
-
-        plt.figure(figsize=(10, 5))
-        plt.plot(K_range, silhouette_scores, marker='o')
-        plt.title('Silhouette Score vs. Number of Clusters')
-        plt.xlabel('Number of Clusters')
-        plt.ylabel('Silhouette Score')
-        plt.savefig("silhouette_plot.png")
-        plt.show()
-
-        kmeans = KMeans(n_clusters=3, random_state=42)
-        df['Cluster'] = kmeans.fit_predict(X_scaled)
-
-        plt.figure(figsize=(8, 6))
-        sns.scatterplot(
-            data=df,
-            x='Year',
-            y='Total',
-            hue='Cluster',
-            palette='Set2'
-        )
-        plt.title('Grouping Olympic Results into Clusters')
-        plt.savefig("clustering_plot.png")
-        plt.show()
+    return df
 
 
-def perform_fitting(df):
+def writing(moments, col):
     """
-    Fits a linear regression model using Year as the independent variable
-    and Total medals as the dependent variable. Shows actual vs. predicted
-    plots and residuals. Includes feature scaling and inverse transformation.
+    Writes out the statistical moments in a readable format.
     """
-    if {'Year', 'Total'}.issubset(df.columns):
-        X_fit = df[['Year']]
-        y_fit = df[['Total']]
+    print(f"\nFor the attribute {col}:")
+    print(f"Mean = {moments[0]:.2f}")
+    print(f"Standard Deviation = {moments[1]:.2f}")
+    print(f"Skewness = {moments[2]:.2f}")
+    print(f"Excess Kurtosis = {moments[3]:.2f}")
 
-        scaler_X = StandardScaler()
-        scaler_y = StandardScaler()
 
-        X_scaled_fit = scaler_X.fit_transform(X_fit)
-        y_scaled_fit = scaler_y.fit_transform(y_fit)
+def plot_elbow_method():
+    fig, ax = plt.subplots()
+    plt.savefig("elbow_plot.png")
+    return
 
-        model = LinearRegression()
-        model.fit(X_scaled_fit, y_scaled_fit)
 
-        predicted_scaled = model.predict(X_scaled_fit)
-        predicted = scaler_y.inverse_transform(predicted_scaled)
-        residuals = y_fit.values.flatten() - predicted.flatten()
+def one_silhouette_inertia():
+    _score = _inertia = None
+    return _score, _inertia
 
-        print("\nRegression coefficient for Year:", model.coef_[0][0])
-        print("Intercept:", model.intercept_[0])
-        print("R² score:", r2_score(y_fit, predicted))
 
-        plt.figure(figsize=(8, 6))
-        plt.scatter(y_fit, predicted)
-        plt.xlabel('Actual Total Medals')
-        plt.ylabel('Predicted Total Medals')
-        plt.title('Actual vs. Predicted Medals')
-        plt.savefig("fitting_plot.png")
-        plt.show()
+def plot_clustered_data(labels, data, xmeans, ymeans, centre_labels):
+    """
+    Plot clustered data points using the labels returned by KMeans.
+    """
+    # Recreate the original 2D data for plotting
+    X = data  # We expect this to be the scaled data
+    if X is None or labels is None:
+        print("No data provided for plotting clustered data.")
+        return
 
-        plt.figure(figsize=(8, 6))
-        plt.scatter(predicted, residuals)
-        plt.axhline(y=0, color='r', linestyle='--')
-        plt.xlabel('Predicted Total Medals')
-        plt.ylabel('Residuals')
-        plt.title('Residual Plot')
-        plt.savefig("residual_plot.png")
-        plt.show()
+    plt.figure(figsize=(8, 6))
+    scatter = plt.scatter(X[:, 0], X[:, 1], c=labels, cmap='viridis', s=50)
+    plt.title('Clustered Data Plot')
+    plt.xlabel('Feature 1')
+    plt.ylabel('Feature 2')
+    plt.colorbar(scatter, label='Cluster Label')
+    plt.savefig("clustering.png")
+    plt.show()
+
+
+def perform_clustering(df, col1, col2):
+    """
+    Perform KMeans clustering on two selected columns.
+    Also saves elbow plot and silhouette plot.
+    Returns the cluster labels for plotting.
+    """
+    from sklearn.metrics import silhouette_samples
+
+    # Step 1: Prepare data
+    X = df[[col1, col2]]
+    scaler = StandardScaler()
+    X_scaled = scaler.fit_transform(X)
+
+    # Step 2: Elbow Plot
+    inertia = []
+    for k in range(1, 10):
+        kmeans = KMeans(n_clusters=k, random_state=42)
+        kmeans.fit(X_scaled)
+        inertia.append(kmeans.inertia_)
+
+    plt.figure()
+    plt.plot(range(1, 10), inertia, marker='o')
+    plt.title('Elbow Method For Optimal k')
+    plt.xlabel('Number of clusters')
+    plt.ylabel('Inertia')
+    plt.savefig("elbow_plot.png")
+    plt.show()
+
+    # Step 3: Final Clustering
+    kmeans = KMeans(n_clusters=3, random_state=42)
+    labels = kmeans.fit_predict(X_scaled)
+
+    # Step 4: Silhouette Score
+    sil_score = silhouette_score(X_scaled, labels)
+    print(f"Silhouette Score: {sil_score:.2f}")
+
+    # Step 5: Silhouette Plot
+    sample_scores = silhouette_samples(X_scaled, labels)
+    plt.figure(figsize=(8, 6))
+    y_lower = 10
+    for i in range(3):  # for 3 clusters
+        ith_scores = sample_scores[labels == i]
+        ith_scores.sort()
+        size = ith_scores.shape[0]
+        plt.barh(range(y_lower, y_lower + size), ith_scores)
+        y_lower += size + 10
+
+    plt.axvline(sil_score, color="red", linestyle="--")
+    plt.title("Silhouette Scores per Cluster")
+    plt.xlabel("Silhouette Coefficient")
+    plt.ylabel("Clustered Samples")
+    plt.savefig("silhouette_plot.png")
+    plt.show()
+
+    return labels
+
+
+def perform_fitting(df, col1, col2):
+    """
+    Fit a Linear Regression model to one feature and one target.
+    Returns scaled feature, prediction, and actual target.
+    """
+    X = df[[col1]].values
+    y = df[col2].values
+
+    scaler = StandardScaler()
+    X_scaled = scaler.fit_transform(X)
+
+    model = LinearRegression()
+    model.fit(X_scaled, y)
+    y_pred = model.predict(X_scaled)
+
+    return y_pred, X_scaled, y
+
+
+def plot_fitted_data(data, X, y):
+    """
+    Plot actual vs. predicted data with R² score.
+    """
+    fig, ax = plt.subplots()
+    ax.plot(X, y, label='Actual')
+    ax.plot(X, data, label='Predicted', linestyle='--')
+    ax.set_title(f"Fitting Plot (R²: {r2_score(y, data):.2f})")
+    ax.legend()
+    plt.savefig("fitting.png")
+    return
 
 
 def main():
@@ -205,16 +251,32 @@ def main():
     df = pd.read_csv('data.csv')
     df.rename(columns={'ï»¿Year': 'Year'}, inplace=True)
     df['Year'] = df['Year'].astype(int)
+    df = preprocessing(df)
 
-    print(df.head())
-    print("Unique years:", df['Year'].unique())
+    col = 'Total'
+    plot_relational_plot(df)
+    plot_statistical_plot(df)
+    plot_categorical_plot(df)
 
-    plot_relational(df)
-    plot_categorical(df)
-    plot_statistical(df)
-    calculate_statistics(df)
-    perform_clustering(df)
-    perform_fitting(df)
+    moments = statistical_analysis(df, col)
+    writing(moments, col)
+
+    clustering_data = df[['Total', 'Year']]  # The data you used for clustering
+    scaler = StandardScaler()
+    clustering_data_scaled = scaler.fit_transform(clustering_data)
+
+    clustering_results = perform_clustering(df, 'Total', 'Year')
+    plot_clustered_data(
+        clustering_results,
+        clustering_data_scaled,
+        None,
+        None,
+        None
+    )
+    fitting_results = perform_fitting(df, 'Year', 'Total')
+    plot_fitted_data(*fitting_results)
+
+    return
 
 
 if __name__ == "__main__":
