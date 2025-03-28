@@ -45,8 +45,7 @@ def plot_categorical(df):
             .sum()
             .sort_values(ascending=False)
             .head(10)
-         )
-
+        )
         plt.figure(figsize=(10, 6))
         sns.barplot(x=top_countries.index, y=top_countries.values)
         plt.title('Top 10 Countries by Total Medals (Overall)')
@@ -59,7 +58,7 @@ def plot_categorical(df):
 def plot_statistical(df):
     """
     Displays a heatmap of correlations between numeric columns in the dataset.
-    Useful for identifying relationships between medal counts and other
+    Useful for identifying relationships between medal counts and other 
     variables.
     """
     numeric_columns = df.select_dtypes(include=[np.number])
@@ -70,11 +69,11 @@ def plot_statistical(df):
         plt.savefig("statistical_plot.png")
         plt.show()
 
-
 def calculate_statistics(df):
     """
     Calculates and prints descriptive statistics including head, describe,
     mean, variance, skewness, and kurtosis of numerical columns.
+    Also explains the meaning of each statistical moment.
     """
     numeric_columns = df.select_dtypes(include=[np.number])
     print("\nHead:")
@@ -83,16 +82,16 @@ def calculate_statistics(df):
     print("\nDescribe:")
     print(numeric_columns.describe())
 
-    print("\nMean:")
+    print("\nMean (The average value — 1st moment):")
     print(numeric_columns.mean())
 
-    print("\nVariance:")
+    print("\nVariance (How spread out the values are — 2nd moment):")
     print(numeric_columns.var())
 
-    print("\nSkewness:")
+    print("\nSkewness (Symmetry of distribution — 3rd moment):")
     print(numeric_columns.skew())
 
-    print("\nKurtosis:")
+    print("\nKurtosis (Tailedness of distribution — 4th moment):")
     print(numeric_columns.kurtosis())
 
 
@@ -115,8 +114,9 @@ def perform_clustering(df):
             kmeans = KMeans(n_clusters=k, random_state=42)
             kmeans.fit(X_scaled)
             distortions.append(kmeans.inertia_)
-            score = silhouette_score(X_scaled, kmeans.labels_)
-            silhouette_scores.append(score)
+            silhouette_scores.append(
+                silhouette_score(X_scaled, kmeans.labels_)
+            )
 
         plt.figure(figsize=(10, 5))
         plt.plot(K_range, distortions, marker='o')
@@ -145,7 +145,6 @@ def perform_clustering(df):
             hue='Cluster',
             palette='Set2'
         )
-
         plt.title('Grouping Olympic Results into Clusters')
         plt.savefig("clustering_plot.png")
         plt.show()
