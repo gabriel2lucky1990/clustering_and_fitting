@@ -1,8 +1,11 @@
 """
-Olympics Medals Analysis: Visualizations, Statistics, Clustering, and Regression Fitting
-Author: Your Name
-Description: This script explores Olympic data using statistical analysis, clustering (KMeans), and linear regression.
-It includes visualizations (relational, categorical, statistical), statistical moments, and fitting with proper scaling.
+Olympics Medals Analysis: Visualizations, Statistics, Clustering, and
+Regression Fitting
+Author: Gabriel Lucky Lotanna
+Description: This script explores Olympic data using statistical analysis,
+clustering (KMeans), and linear regression.
+It includes visualizations (relational, categorical, statistical), statistical 
+moments, and fitting with proper scaling.
 """
 
 import pandas as pd
