@@ -58,7 +58,7 @@ def plot_categorical(df):
 def plot_statistical(df):
     """
     Displays a heatmap of correlations between numeric columns in the dataset.
-    Useful for identifying relationships between medal counts and other 
+    Useful for identifying relationships between medal counts and other
     variables.
     """
     numeric_columns = df.select_dtypes(include=[np.number])
@@ -68,6 +68,7 @@ def plot_statistical(df):
         plt.title('Correlation Between Medal Counts')
         plt.savefig("statistical_plot.png")
         plt.show()
+
 
 def calculate_statistics(df):
     """
