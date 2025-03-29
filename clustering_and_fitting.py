@@ -1,12 +1,12 @@
 
-""" 
-Olympics Medals Analysis: Visualizations, Statistics, Clustering, and 
-Regression Fitting 
-Author: Gabriel Lucky Lotanna (student id: 24070357) 
-Description: This script explores Olympic data using statistical analysis, 
-clustering (KMeans), and linear regression. 
-It includes visualizations (relational, categorical, statistical), statistical 
-moments, and fitting with proper scaling. 
+"""
+Olympics Medals Analysis: Visualizations, Statistics, Clustering, and
+Regression Fitting
+Author: Gabriel Lucky Lotanna (student id: 24070357)
+Description: This script explores Olympic data using statistical analysis,
+clustering (KMeans), and linear regression.
+It includes visualizations (relational, categorical, statistical), statistical
+moments, and fitting with proper scaling.
 """
 
 import pandas as pd
@@ -14,8 +14,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.cluster import KMeans
 from sklearn.linear_model import LinearRegression
-from sklearn.metrics import silhouette_score, r2_score
 from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import silhouette_score, silhouette_samples, r2_score
 import numpy as np
 
 
@@ -47,7 +47,7 @@ def plot_categorical_plot(df):
             .sort_values(ascending=False)
             .head(10)
         )
-        
+ 
         plt.figure(figsize=(10, 6))
         sns.barplot(x=top_countries.index, y=top_countries.values)
         plt.title('Top 10 Countries by Total Medals (Overall)')
@@ -123,15 +123,31 @@ def writing(moments, col):
     print(f"Excess Kurtosis = {moments[3]:.2f}")
 
 
-def plot_elbow_method():
-    fig, ax = plt.subplots()
+def plot_elbow_method(X_scaled):
+    """
+    Generates and saves the elbow plot for determining optimal clusters.
+    """
+    inertia = []
+    for k in range(1, 10):
+        kmeans = KMeans(n_clusters=k, random_state=42)
+        kmeans.fit(X_scaled)
+        inertia.append(kmeans.inertia_)
+
+    plt.figure()
+    plt.plot(range(1, 10), inertia, marker='o')
+    plt.title('Elbow Method For Optimal k')
+    plt.xlabel('Number of clusters')
+    plt.ylabel('Inertia')
     plt.savefig("elbow_plot.png")
-    return
+    plt.show()
 
 
-def one_silhouette_inertia():
-    _score = _inertia = None
-    return _score, _inertia
+def one_silhouette_inertia(X_scaled, labels):
+    """
+    Calculates and returns the silhouette score for clustered data.
+    """
+    score = silhouette_score(X_scaled, labels)
+    return score
 
 
 def plot_clustered_data(labels, data, xmeans, ymeans, centre_labels):
@@ -160,48 +176,33 @@ def perform_clustering(df, col1, col2):
     Also saves elbow plot and silhouette plot.
     Returns the cluster labels for plotting.
     """
-    from sklearn.metrics import silhouette_samples
-
-    # Step 1: Prepare data
     X = df[[col1, col2]]
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(X)
 
-    # Step 2: Elbow Plot
-    inertia = []
-    for k in range(1, 10):
-        kmeans = KMeans(n_clusters=k, random_state=42)
-        kmeans.fit(X_scaled)
-        inertia.append(kmeans.inertia_)
+    # Call elbow plot function
+    plot_elbow_method(X_scaled)
 
-    plt.figure()
-    plt.plot(range(1, 10), inertia, marker='o')
-    plt.title('Elbow Method For Optimal k')
-    plt.xlabel('Number of clusters')
-    plt.ylabel('Inertia')
-    plt.savefig("elbow_plot.png")
-    plt.show()
-
-    # Step 3: Final Clustering
+    # Final clustering
     kmeans = KMeans(n_clusters=3, random_state=42)
     labels = kmeans.fit_predict(X_scaled)
 
-    # Step 4: Silhouette Score
-    sil_score = silhouette_score(X_scaled, labels)
-    print(f"Silhouette Score: {sil_score:.2f}")
+    # Call silhouette score function
+    score = one_silhouette_inertia(X_scaled, labels)
+    print(f"Silhouette Score: {score:.2f}")
 
-    # Step 5: Silhouette Plot
+    # Silhouette plot
     sample_scores = silhouette_samples(X_scaled, labels)
     plt.figure(figsize=(8, 6))
     y_lower = 10
-    for i in range(3):  # for 3 clusters
+    for i in range(3):
         ith_scores = sample_scores[labels == i]
         ith_scores.sort()
         size = ith_scores.shape[0]
         plt.barh(range(y_lower, y_lower + size), ith_scores)
         y_lower += size + 10
 
-    plt.axvline(sil_score, color="red", linestyle="--")
+    plt.axvline(score, color="red", linestyle="--")
     plt.title("Silhouette Scores per Cluster")
     plt.xlabel("Silhouette Coefficient")
     plt.ylabel("Clustered Samples")
@@ -261,7 +262,7 @@ def main():
     moments = statistical_analysis(df, col)
     writing(moments, col)
 
-    clustering_data = df[['Total', 'Year']]  # The data you used for clustering
+    clustering_data = df[['Total', 'Year']]
     scaler = StandardScaler()
     clustering_data_scaled = scaler.fit_transform(clustering_data)
 
