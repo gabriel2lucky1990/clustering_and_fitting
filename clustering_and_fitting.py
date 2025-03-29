@@ -47,7 +47,7 @@ def plot_categorical_plot(df):
             .sort_values(ascending=False)
             .head(10)
         )
- 
+
         plt.figure(figsize=(10, 6))
         sns.barplot(x=top_countries.index, y=top_countries.values)
         plt.title('Top 10 Countries by Total Medals (Overall)')
