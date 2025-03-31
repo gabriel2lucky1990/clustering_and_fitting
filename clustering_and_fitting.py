@@ -16,7 +16,7 @@ It includes:
 - Clustering using KMeans with elbow and silhouette evaluation
 - Fitting using linear regression on one feature and one target variable
 
-All plots are saved with high resolution (dpi=144) and follow the structure 
+All plots are saved with high resolution (dpi=144) and follow the structure
 defined in the provided GitHub template.
 
 The script is written to comply with PEP 8 and follows the functional
@@ -132,7 +132,7 @@ def writing(moments, col):
 def perform_clustering(df, col1, col2):
     """Perform clustering using KMeans, including elbow plot, silhouette
     score and plot, and inverse transform"""
- 
+
     # Step 1: Select and scale data
     X = df[[col1, col2]]
     scaler = StandardScaler()
@@ -185,11 +185,11 @@ def perform_clustering(df, col1, col2):
         y_upper = y_lower + size_cluster_i
         color = cm.nipy_spectral(float(i) / 3)
         ax.fill_betweenx(
-            np.arange(y_lower, y_upper), 
-            0, 
+            np.arange(y_lower, y_upper),
+            0,
             ith_cluster_silhouette_values,
-            facecolor=color, 
-            edgecolor=color, 
+            facecolor=color,
+            edgecolor=color,
             alpha=0.7
         )
         ax.text(-0.05, y_lower + 0.5 * size_cluster_i, str(i))
@@ -212,7 +212,7 @@ def perform_clustering(df, col1, col2):
 
 
 def plot_clustered_data(
-    labels, x, y, xmeans, ymeans, 
+    labels, x, y, xmeans, ymeans,
     centroids_label="Cluster Centers"
 ):
     """Plot clustered data with enhanced styling"""
@@ -276,8 +276,6 @@ def plot_fitted_data(df, X, y, y_pred):
     print("Saved: fitting_plot.png")
 
 
-
-
 def main():
     df = pd.read_csv("data.csv")
     df = preprocessing(df)
@@ -300,7 +298,7 @@ def main():
     print(
        f"\nRegression Equation: MPG = {coef:.4f} * Horsepower + "
        f"{intercept:.2f}"
-   )
+       )
 
 
 if __name__ == "__main__":
