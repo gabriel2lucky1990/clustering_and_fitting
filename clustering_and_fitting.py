@@ -168,7 +168,7 @@ def perform_clustering(df, col1, col2):
 
     # Get silhouette score and inertia from function
     _score, _inertia = one_silhouette_inertia()
-   
+
     # Silhouette plot
     sample_silhouette_values = silhouette_samples(X_scaled, labels)
     fig, ax = plt.subplots(figsize=(8, 6))
