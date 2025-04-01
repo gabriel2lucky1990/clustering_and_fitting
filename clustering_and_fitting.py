@@ -25,8 +25,6 @@ The script is written to comply with PEP 8 and follows the functional
 
 
 import matplotlib.pyplot as plt
-import os
-os.environ['OMP_NUM_THREADS'] = '2'
 import numpy as np
 import pandas as pd
 import seaborn as sns
@@ -37,6 +35,8 @@ from sklearn.metrics import silhouette_score
 from sklearn.preprocessing import StandardScaler
 from scipy.stats import skew, kurtosis
 from sklearn.metrics import silhouette_samples
+import os
+os.environ['OMP_NUM_THREADS'] = '2'
 
 
 def plot_relational_plot(df):
@@ -56,15 +56,15 @@ def plot_categorical_plot(df):
     """Categorical plot: Average MPG by Cylinders with enhanced styling"""
     fig, ax = plt.subplots()
     sns.barplot(
-    data=df,
-    x="cylinders",
-    y="mpg",
-    hue="cylinders",
-    palette="pastel",
-    dodge=False,
-    legend=False,
-    ax=ax
-)
+        data=df,
+        x="cylinders",
+        y="mpg",
+        hue="cylinders",
+        palette="pastel",
+        dodge=False,
+        legend=False,
+        ax=ax
+        )
     ax.set_title("Average MPG by Cylinders")
     ax.grid(True, linestyle='--', alpha=0.6)
     plt.savefig("categorical_plot.png", dpi=144)
@@ -137,7 +137,7 @@ def perform_clustering(df, col1, col2):
     X = df[[col1, col2]]
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(X)
-    
+
     # Inner function 1: elbow plot
     def plot_elbow_method():
         fig, ax = plt.subplots()
@@ -269,6 +269,7 @@ def plot_fitted_data(df, X, y, y_pred):
     fig.savefig("fitting_plot.png", dpi=144)
     plt.show()
     return
+
 
 def main():
     df = pd.read_csv("data.csv")
