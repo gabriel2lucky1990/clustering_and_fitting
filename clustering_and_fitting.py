@@ -35,8 +35,6 @@ from sklearn.metrics import silhouette_score
 from sklearn.preprocessing import StandardScaler
 from scipy.stats import skew, kurtosis
 from sklearn.metrics import silhouette_samples
-import os
-os.environ['OMP_NUM_THREADS'] = '2'
 
 
 def plot_relational_plot(df):
