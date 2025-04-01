@@ -25,6 +25,8 @@ The script is written to comply with PEP 8 and follows the functional
 
 
 import matplotlib.pyplot as plt
+import os
+os.environ['OMP_NUM_THREADS'] = '2'
 import numpy as np
 import pandas as pd
 import seaborn as sns
@@ -45,25 +47,29 @@ def plot_relational_plot(df):
         s=80, edgecolor='black', linewidth=0.5
     )
     ax.set_title("Horsepower vs MPG")
-    fig.savefig("relational_plot.png", dpi=144)
+    plt.savefig("relational_plot.png", dpi=144)
     plt.show()
-    print("Saved: relational_plot.png")
-    print("Saved: relational_plot.png")
+    return
 
 
 def plot_categorical_plot(df):
     """Categorical plot: Average MPG by Cylinders with enhanced styling"""
     fig, ax = plt.subplots()
     sns.barplot(
-        data=df, x="cylinders", y="mpg", estimator=np.mean,
-        palette="pastel", ax=ax
-    )
+    data=df,
+    x="cylinders",
+    y="mpg",
+    hue="cylinders",
+    palette="pastel",
+    dodge=False,
+    legend=False,
+    ax=ax
+)
     ax.set_title("Average MPG by Cylinders")
     ax.grid(True, linestyle='--', alpha=0.6)
-    fig.savefig("categorical_plot.png", dpi=144)
+    plt.savefig("categorical_plot.png", dpi=144)
     plt.show()
-    print("Saved: categorical_plot.png")
-    print("Saved: categorical_plot.png")
+    return
 
 
 def plot_statistical_plot(df):
@@ -75,23 +81,19 @@ def plot_statistical_plot(df):
         linewidths=0.5, linecolor='white', cbar=True, square=True
     )
     ax.set_title("Correlation Heatmap")
-    fig.savefig("statistical_plot.png", dpi=144)
+    plt.savefig("statistical_plot.png", dpi=144)
     plt.show()
-    print("Saved: statistical_plot.png")
-    print("Saved: statistical_plot.png")
+    return
 
 
 def statistical_analysis(df, col):
     """Calculate and display statistical moments and tools for a column"""
     print("\nHEAD of Data:")
     print(df.head())
-
     print("\nDESCRIBE:")
     print(df.describe())
-
     print("\nCORRELATION:")
     print(df.select_dtypes(include=[np.number]).corr())
-
     data = df[col]
     mean = data.mean()
     stddev = data.std()
@@ -114,7 +116,6 @@ def writing(moments, col):
     print(f"Standard Deviation = {moments[1]:.2f}")
     print(f"Skewness = {moments[2]:.2f}")
     print(f"Excess Kurtosis = {moments[3]:.2f}")
-
     print("\nInterpretation:")
     if moments[2] > 1:
         print("The data is highly right-skewed.")
@@ -122,22 +123,21 @@ def writing(moments, col):
         print("The data is highly left-skewed.")
     else:
         print("The data is approximately symmetrical.")
-
     if moments[3] > 0:
         print("The distribution is leptokurtic (peaked).")
     else:
         print("The distribution is platykurtic (flat).")
+        return
 
 
 def perform_clustering(df, col1, col2):
     """Perform clustering using KMeans, including elbow plot, silhouette
     score and plot, and inverse transform"""
-
     # Step 1: Select and scale data
     X = df[[col1, col2]]
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(X)
-
+    
     # Inner function 1: elbow plot
     def plot_elbow_method():
         fig, ax = plt.subplots()
@@ -150,7 +150,7 @@ def perform_clustering(df, col1, col2):
         ax.set_title("Elbow Plot")
         ax.set_xlabel("Number of Clusters")
         ax.set_ylabel("Inertia")
-        fig.savefig("elbow_plot.png", dpi=144)
+        plt.savefig("elbow_plot.png", dpi=144)
         plt.show()
         print("✅ Saved: elbow_plot.png")
 
@@ -199,9 +199,8 @@ def perform_clustering(df, col1, col2):
     ax.set_title("Silhouette Plot for 3 Clusters")
     ax.set_xlabel("Silhouette Coefficient Values")
     ax.set_ylabel("Cluster Label")
-    fig.savefig("silhouette_plot.png", dpi=144)
+    plt.savefig("silhouette_plot.png", dpi=144)
     plt.show()
-    print("✅ Saved: silhouette_plot.png")
 
     # Inverse transform for plotting
     X_inv = scaler.inverse_transform(X_scaled)
@@ -226,13 +225,11 @@ def plot_clustered_data(
         xmeans, ymeans, color="black", s=120,
         marker="X", label=centroids_label
     )
-
     ax.legend()
     ax.set_title("Clustering: Weight vs Acceleration")
     fig.savefig("clustering_plot.png", dpi=144)
     plt.show()
-    print("Saved: clustering_plot.png")
-    print("Saved: clustering_plot.png")
+    return
 
 
 def perform_fitting(df, col1, col2):
@@ -267,14 +264,11 @@ def plot_fitted_data(df, X, y, y_pred):
         x=X.squeeze(), y=y_pred.squeeze(), color="red",
         label="Fitted Line", linewidth=2.5, ax=ax
     )
-
     ax.set_title("Fitting: Horsepower vs MPG")
     ax.legend()
     fig.savefig("fitting_plot.png", dpi=144)
     plt.show()
-    print("Saved: fitting_plot.png")
-    print("Saved: fitting_plot.png")
-
+    return
 
 def main():
     df = pd.read_csv("data.csv")
