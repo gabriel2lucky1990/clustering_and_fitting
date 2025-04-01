@@ -150,7 +150,6 @@ def perform_clustering(df, col1, col2):
         ax.set_ylabel("Inertia")
         plt.savefig("elbow_plot.png", dpi=144)
         plt.show()
-        print("✅ Saved: elbow_plot.png")
 
     # Inner function 2: silhouette score and inertia
     def one_silhouette_inertia():
@@ -169,9 +168,7 @@ def perform_clustering(df, col1, col2):
 
     # Get silhouette score and inertia from function
     _score, _inertia = one_silhouette_inertia()
-    print(f"✅ Silhouette Score: {_score:.2f}")
-    print(f"✅ Inertia: {_inertia:.2f}")
-
+   
     # Silhouette plot
     sample_silhouette_values = silhouette_samples(X_scaled, labels)
     fig, ax = plt.subplots(figsize=(8, 6))
