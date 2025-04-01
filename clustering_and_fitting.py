@@ -289,6 +289,7 @@ def main():
        f"\nRegression Equation: MPG = {coef:.4f} * Horsepower + "
        f"{intercept:.2f}"
        )
+    return
 
 
 if __name__ == "__main__":
